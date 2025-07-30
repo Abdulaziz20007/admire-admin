@@ -1,0 +1,165 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Admire Admin Animation Effects Guide
+
+This rule documents the animation and interactive effects used throughout the Admire Learning Center admin dashboard.
+
+## Background Particles
+
+The starry background effect is implemented through dynamically generated particles:
+
+```javascript
+// Function to generate particles
+useEffect(() => {
+  const createParticles = () => {
+    const particleContainer = document.getElementById("particles");
+    if (!particleContainer) return;
+
+    particleContainer.innerHTML = "";
+    const particleCount = 70;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.className = "absolute rounded-full opacity-0";
+
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+
+      // Random animation duration between 10s and 30s
+      const duration = Math.random() * 20 + 10;
+      particle.style.animation = `float ${duration}s infinite ease-in-out`;
+
+      // Random delay
+      particle.style.animationDelay = `${Math.random() * 5}s`;
+
+      // Random opacity between 0.1 and 0.5
+      particle.style.opacity = `${Math.random() * 0.4 + 0.1}`;
+
+      // Add to container
+      particleContainer.appendChild(particle);
+    }
+  };
+
+  createParticles();
+
+  // Recreate particles on window resize
+  window.addEventListener("resize", createParticles);
+  return () => window.removeEventListener("resize", createParticles);
+}, []);
+```
+
+Reference: [src/app/dashboard/layout.tsx](mdc:src/app/dashboard/layout.tsx)
+
+## Animation Keyframes
+
+The floating animation is defined in global CSS:
+
+```css
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+    background-color: var(--particle-color);
+    box-shadow: 0 0 5px var(--particle-glow);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    background-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-15px);
+    background-color: var(--particle-color);
+    box-shadow: 0 0 5px var(--particle-glow);
+  }
+  75% {
+    transform: translateY(15px) translateX(5px);
+    background-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+  }
+}
+```
+
+Reference: [src/app/globals.css](mdc:src/app/globals.css)
+
+## Hover Effects
+
+Use consistent hover effects for interactive elements:
+
+### Card Hover
+
+```jsx
+<div className="group hover:scale-[1.02] transition-all duration-300">
+  {/* Card content */}
+</div>
+```
+
+### Button Hover
+
+```jsx
+<button className="bg-[#4f9bff] hover:bg-[#3b82f6] text-white transition-colors">
+  Button Text
+</button>
+```
+
+### Secondary Button Hover
+
+```jsx
+<button className="text-[#4f9bff] hover:text-white border border-[#4f9bff]/30 hover:bg-[#4f9bff]/20 transition-colors">
+  Button Text
+</button>
+```
+
+## Glow Effects
+
+Create ambient glow effects with blurred elements:
+
+```jsx
+{
+  /* Background glow */
+}
+<div className="absolute top-0 -right-16 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>;
+
+{
+  /* Animated glow */
+}
+<div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/5 rounded-full blur-[120px] animate-pulse"></div>;
+```
+
+## Notification and Alert Animations
+
+```jsx
+{
+  /* Notification indicator */
+}
+<div className="absolute -top-1 -right-1 w-2 h-2 bg-[#4f9bff] rounded-full animate-pulse"></div>;
+```
+
+Reference: [src/components/Header.tsx](mdc:src/components/Header.tsx)
+
+## Logo Animation
+
+```jsx
+<div className="relative">
+  <div className="absolute inset-0 bg-[#4f9bff]/30 rounded-full animate-ping opacity-75"></div>
+  <Image
+    src="/logo.svg"
+    alt="Admire Admin Logo"
+    width={40}
+    height={40}
+    className="relative z-10"
+  />
+</div>
+```
+
+Reference: [src/components/Sidebar.tsx](mdc:src/components/Sidebar.tsx)

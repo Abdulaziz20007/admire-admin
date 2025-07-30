@@ -1,0 +1,251 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Admire Admin Style Guide
+
+This document outlines the styling rules, conventions, and brand guidelines for the Admire Learning Center admin dashboard.
+
+## Brand Colors
+
+### Primary Colors
+
+- **Primary Blue**: `#4f9bff` - Main brand color, used for primary buttons, active states, and important UI elements
+- **Primary Blue (Darker)**: `#3b82f6` - Used for hover states of primary buttons
+- **Dark Blue Background**: `#0f1a35` - Main background color
+- **Medium Blue**: `#172442` - Used for cards and content areas
+- **Accent Blue**: `#2a3c7d` - Used for gradients and accents
+
+### Text Colors
+
+- **White**: `#ffffff` - Primary text on dark backgrounds
+- **White (70%)**: `rgba(255, 255, 255, 0.7)` - Secondary text and labels
+- **White (50%)**: `rgba(255, 255, 255, 0.5)` - Tertiary text and placeholders
+- **White (10%)**: `rgba(255, 255, 255, 0.1)` - Subtle borders and dividers
+
+### Status Colors
+
+- **Success**: `#10b981` (Green) - For success states and positive indicators
+
+  - Text: `rgba(16, 185, 129, 1)` or `text-green-400`
+  - Background: `rgba(16, 185, 129, 0.3)` or `bg-green-900/30`
+  - Border: `border-green-500/30`
+
+- **Warning**: `#f59e0b` (Amber) - For warning states and cautionary indicators
+
+  - Text: `rgba(245, 158, 11, 1)` or `text-amber-400`
+  - Background: `rgba(245, 158, 11, 0.3)` or `bg-amber-900/30`
+  - Border: `border-amber-500/30`
+
+- **Error**: `#ef4444` (Red) - For error states and negative indicators
+
+  - Text: `rgba(239, 68, 68, 1)` or `text-red-400`
+  - Background: `rgba(239, 68, 68, 0.3)` or `bg-red-900/30`
+  - Border: `border-red-500/30`
+
+- **Info**: `#3b82f6` (Blue) - For informational states
+  - Text: `rgba(59, 130, 246, 1)` or `text-blue-400`
+  - Background: `rgba(59, 130, 246, 0.3)` or `bg-blue-900/30`
+  - Border: `border-blue-500/30`
+
+## Glass Morphism Effects
+
+Glass morphism is a key visual element of our admin dashboard, creating a modern, layered interface with depth.
+
+### Backdrop Blur
+
+- **Light Blur**: `backdrop-blur-sm` - Used for cards and header elements
+
+  - Example: `bg-[#172442]/90 backdrop-blur-sm`
+
+- **Heavy Blur**: `backdrop-blur-md` - Used for modal overlays and dropdowns
+  - Example: `bg-white/10 backdrop-blur-md`
+
+### Transparency Levels
+
+- **High Transparency**: `bg-white/5` (5% opacity) - Subtle highlights
+- **Medium Transparency**: `bg-white/10` (10% opacity) - Card backgrounds, hover states
+- **Low Transparency**: `bg-white/20` (20% opacity) - Active elements, buttons
+- **Background Overlay**: `bg-[#172442]/90` (90% opacity) - Semi-transparent card backgrounds
+
+## Borders and Dividers
+
+### Border Styles
+
+- **Subtle Borders**: `border border-white/10` - Used for cards and containers
+- **Medium Borders**: `border border-white/20` - Used for interactive elements
+- **Status Borders**: `border border-green-500/20` - Used for status indicators with respective colors
+
+### Border Radius
+
+- **Small Radius**: `rounded-md` - Used for buttons and small elements
+- **Medium Radius**: `rounded-lg` - Used for cards and containers
+- **Large Radius**: `rounded-xl` - Used for main sections and feature cards
+- **Full Radius**: `rounded-full` - Used for avatars, badges, and circular UI elements
+
+## Shadows and Glows
+
+### Box Shadows
+
+- **Regular Shadow**: `shadow-lg` - Standard shadow for elevated elements
+- **Colored Shadow**: `shadow-lg shadow-[#4f9bff]/30` - For primary buttons and active states
+
+### Glow Effects
+
+- **Subtle Glow**: `bg-blue-500/20 rounded-full blur-2xl` - Ambient glow behind elements
+- **Accent Glow**: `bg-primary/5 rounded-full blur-[120px] animate-pulse` - Animated background glow
+- **Intense Glow**: `bg-primary/10 rounded-full blur-3xl` - Larger area glow
+
+## Animations and Transitions
+
+### Animation Types
+
+- **Pulse**: `animate-pulse` - Used for indicators and subtle attention-grabbing elements
+- **Ping**: `animate-ping` - Used for notifications and alerts
+- **Float**: Custom keyframe animation for background particles
+
+### Transition Effects
+
+- **Standard Transition**: `transition-all duration-300` - Used for most interactive elements
+- **Quick Transition**: `transition-all duration-200` - Used for small UI elements
+- **Hover Scale**: `hover:scale-[1.02]` - Subtle scaling effect on hover
+
+## Layout Spacing
+
+### Padding
+
+- **Card Padding**: `p-6` - Standard padding for cards and containers
+- **Button Padding**: `px-4 py-2` - Standard padding for buttons
+- **Section Padding**: `p-3` - Used for smaller interactive elements
+- **Content Areas**: `p-8` - Used for larger content areas
+
+### Margins and Gaps
+
+- **Standard Gap**: `gap-4` - Used between related elements
+- **Section Gap**: `gap-6` - Used between sections
+- **Vertical Spacing**: `space-y-6` - Standard spacing between stacked elements
+
+## Typography
+
+### Font Family
+
+- Default sans-serif font: Geist Sans
+- Monospace font: Geist Mono
+
+### Font Sizes
+
+- **Headings**:
+
+  - H1: `text-3xl font-bold`
+  - H2: `text-2xl font-bold`
+  - H3: `text-xl font-bold`
+  - H4: `text-lg font-semibold`
+
+- **Body Text**:
+  - Regular: `text-base`
+  - Small: `text-sm`
+  - Extra small: `text-xs`
+
+### Font Weights
+
+- **Bold**: `font-bold` - For headings and important text
+- **Semibold**: `font-semibold` - For subheadings
+- **Medium**: `font-medium` - For emphasis
+- **Regular**: Default weight
+
+## Component-Specific Styling
+
+### Cards
+
+```html
+<div
+  class="rounded-xl border border-white/10 bg-gradient-to-br from-[#172442]/90 to-[#0f1a35]/90 backdrop-blur-sm p-6 relative overflow-hidden"
+>
+  <!-- Card content -->
+</div>
+```
+
+### Buttons
+
+#### Primary Button
+
+```html
+<button
+  class="px-4 py-2 text-sm bg-[#4f9bff] hover:bg-[#3b82f6] text-white rounded-lg transition-colors shadow-lg shadow-[#4f9bff]/30"
+>
+  Button Text
+</button>
+```
+
+#### Secondary Button
+
+```html
+<button
+  class="px-4 py-2 text-sm text-[#4f9bff] hover:text-white transition-colors border border-[#4f9bff]/30 rounded-lg hover:bg-[#4f9bff]/20"
+>
+  Button Text
+</button>
+```
+
+### Status Badges
+
+```html
+<span
+  class="px-2 py-1 text-xs font-medium bg-green-900/30 text-green-400 rounded-full border border-green-500/30"
+>
+  Status Text
+</span>
+```
+
+### Charts and Data Visualization
+
+- Use the primary color palette for charts
+- Maintain high contrast for readability
+- Use opacity variants for related data points
+
+## Implementation Guidelines
+
+1. **Color Consistency**: Always use the defined color variables instead of hardcoding colors
+2. **Glass Morphism**: Use backdrop-blur with semi-transparent backgrounds for depth
+3. **Animation Restraint**: Use animations sparingly to avoid overwhelming the user
+4. **Accessibility**: Maintain sufficient contrast ratios for text readability
+5. **Responsive Design**: Ensure all styled components adapt well to different screen sizes
+
+## Background Particles
+
+The starry background effect is created using dynamically generated particles with these properties:
+
+```javascript
+// Particle styling
+particle.className = "absolute rounded-full opacity-0";
+
+// Random size between 2px and 6px
+const size = Math.random() * 4 + 2;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+
+// Random position
+particle.style.left = `${Math.random() * 100}%`;
+particle.style.top = `${Math.random() * 100}%`;
+
+// Random animation duration between 10s and 30s
+const duration = Math.random() * 20 + 10;
+particle.style.animation = `float ${duration}s infinite ease-in-out`;
+```
+
+## CSS Variables
+
+```css
+:root {
+  --primary: #4f9bff;
+  --primary-rgb: 79, 155, 255;
+  --primary-hover: #3b82f6;
+  --background: #0f1a35;
+  --color-surface: #172442;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --color-divider: #273355;
+}
+```

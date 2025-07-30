@@ -1,0 +1,14 @@
+- [ ] admins
+- [ ] icons
+- [ ] medias
+- [ ] messages
+- [ ] phones
+- [ ] socials
+- [ ] students
+- [ ] teachers
+- [ ] web
+- [ ] web-media # many to many connection table
+- [ ] web-phone # many to many connection table
+- [ ] web-social # many to many connection table
+- [ ] web-student # many to many connection table
+- [ ] web-teacher # many to many connection table

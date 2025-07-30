@@ -1,0 +1,135 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Admire Admin Component Styling Guide
+
+This rule provides detailed examples for styling components in the Admire Learning Center admin dashboard.
+
+## Card Components
+
+Cards should use glass morphism effects with gradient backgrounds:
+
+```jsx
+<div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#172442]/90 to-[#0f1a35]/90 backdrop-blur-sm p-6 relative overflow-hidden">
+  {/* Add glowing effect in the background */}
+  <div className="absolute top-0 -right-16 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-500/30 transition-all duration-700"></div>
+
+  {/* Content */}
+  <div className="relative z-10">{/* Card content goes here */}</div>
+</div>
+```
+
+Reference: [src/app/dashboard/page.tsx](mdc:src/app/dashboard/page.tsx)
+
+## Button Styling
+
+### Primary Button
+
+```jsx
+<button className="px-4 py-2 text-sm bg-[#4f9bff] hover:bg-[#3b82f6] text-white rounded-lg transition-colors shadow-lg shadow-[#4f9bff]/30">
+  Button Text
+</button>
+```
+
+### Secondary Button
+
+```jsx
+<button className="w-full mt-6 py-2 text-sm text-[#4f9bff] hover:text-white transition-colors relative z-10 border border-[#4f9bff]/30 rounded-lg hover:bg-[#4f9bff]/20">
+  View All Activities
+</button>
+```
+
+Reference: [src/app/dashboard/page.tsx](mdc:src/app/dashboard/page.tsx)
+
+## Status Indicators
+
+Use consistent status badges with colored backgrounds and borders:
+
+```jsx
+<span className="px-2 py-1 text-xs font-medium bg-green-900/30 text-green-400 rounded-full border border-green-500/30">
+  Completed
+</span>
+
+<span className="px-2 py-1 text-xs font-medium bg-blue-900/30 text-blue-400 rounded-full border border-blue-500/30">
+  Processing
+</span>
+
+<span className="px-2 py-1 text-xs font-medium bg-amber-900/30 text-amber-400 rounded-full border border-amber-500/30">
+  Pending
+</span>
+
+<span className="px-2 py-1 text-xs font-medium bg-red-900/30 text-red-400 rounded-full border border-red-500/30">
+  Cancelled
+</span>
+```
+
+Reference: [src/app/dashboard/page.tsx](mdc:src/app/dashboard/page.tsx)
+
+## Interactive Elements
+
+Add hover effects and transitions to interactive elements:
+
+```jsx
+<div className="flex items-start gap-4 p-3 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 group">
+  <div className="group-hover:scale-110 transition-all duration-300">
+    {/* Content */}
+  </div>
+</div>
+```
+
+## Navigation Elements
+
+Style active navigation items with glow effects:
+
+```jsx
+<Link
+  href="/dashboard"
+  className={`flex items-center p-3 rounded-lg transition-all ${
+    isActive
+      ? "bg-[#4f9bff] text-white shadow-lg shadow-[#4f9bff]/30"
+      : "text-white/70 hover:text-white hover:bg-white/10"
+  }`}
+>
+  {/* Content */}
+</Link>
+```
+
+Reference: [src/components/Sidebar.tsx](mdc:src/components/Sidebar.tsx)
+
+## Animation Effects
+
+Use animation effects to add visual interest:
+
+```jsx
+<div className="absolute -top-1 -right-1 w-2 h-2 bg-[#4f9bff] rounded-full animate-pulse"></div>
+```
+
+Reference: [src/components/Header.tsx](mdc:src/components/Header.tsx)
+
+## Tables
+
+Style tables with consistent hover effects and dividers:
+
+```jsx
+<table className="min-w-full divide-y divide-white/10">
+  <thead>
+    <tr>
+      <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
+        {/* Header content */}
+      </th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-white/10">
+    <tr className="hover:bg-white/5 transition-colors">
+      <td className="px-4 py-4 whitespace-nowrap text-sm text-white/70">
+        {/* Cell content */}
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+Reference: [src/app/dashboard/page.tsx](mdc:src/app/dashboard/page.tsx)

@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --max-width: 1200px;
+
+  /* Standardized Section Spacing System */
+  --section-padding-desktop: 8rem;
+  --section-padding-tablet: 6rem;
+  --section-padding-mobile: 4rem;
+  --section-padding-small: 3rem;
+
+  /* Component-specific spacing overrides */
+  --header-min-height: 100vh;
+  --footer-padding-top: 4rem;
+  --footer-padding-bottom: 1.5rem;
+
+  /* Content wrapper spacing */
+  --content-padding-x: 1rem;
+  --content-padding-x-desktop: 2rem;
+
+  /* Light theme colors */
+  --color-divider: #e8edf5;
+  --color-surface: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --primary: #166fe3;
+  --primary-rgb: 22, 111, 227;
+  --primary-hover: #1d4ed8;
+  --background: #f8fafd;
+  --navbar-bg: rgba(248, 250, 253, 0.7);
+  --navbar-border: rgba(232, 237, 245, 0.8);
+  --global-bg: #ffffff;
+  --particle-color: rgba(0, 0, 0, 0.15);
+  --particle-glow: rgba(0, 0, 0, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Dark theme */
+[data-theme="dark"] {
+  --color-divider: #273355;
+  --color-surface: #172442;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --primary: #4f9bff;
+  --primary-rgb: 79, 155, 255;
+  --primary-hover: #3b82f6;
+  --background: #0f1a35;
+  --navbar-bg: rgba(15, 26, 53, 0.7);
+  --navbar-border: rgba(45, 58, 92, 0.8);
+  --global-bg: #0f1a35;
+  --particle-color: rgba(255, 255, 255, 0.6);
+  --particle-glow: rgba(255, 255, 255, 0.2);
 }
 
+/* System preference fallback */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme]) {
+    --color-divider: #273355;
+    --color-surface: #172442;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --primary: #4f9bff;
+    --primary-rgb: 79, 155, 255;
+    --primary-hover: #3b82f6;
+    --background: #0f1a35;
+    --navbar-bg: rgba(15, 26, 53, 0.7);
+    --navbar-border: rgba(45, 58, 92, 0.8);
+    --global-bg: #0f1a35;
+    --particle-color: rgba(255, 255, 255, 0.6);
+    --particle-glow: rgba(255, 255, 255, 0.2);
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+    background-color: var(--particle-color);
+    box-shadow: 0 0 5px var(--particle-glow);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    background-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-15px);
+    background-color: var(--particle-color);
+    box-shadow: 0 0 5px var(--particle-glow);
+  }
+  75% {
+    transform: translateY(15px) translateX(5px);
+    background-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility classes */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Particles styling */
+#particles div {
+  background-color: var(--particle-color);
+  box-shadow: 0 0 5px var(--particle-glow);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }

@@ -1,0 +1,53 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Admire Admin Project Structure
+
+This rule documents the structure of the Admire Learning Center admin dashboard built with Next.js App Router.
+
+## Core Files
+
+- **Main Entry Point**: [src/app/layout.tsx](mdc:src/app/layout.tsx) - Root layout with HTML/body structure
+- **Main Redirect**: [src/app/page.tsx](mdc:src/app/page.tsx) - Root page that redirects to login
+- **Global CSS**: [src/app/globals.css](mdc:src/app/globals.css) - Global styles and variables
+
+## App Organization
+
+The application follows Next.js App Router structure:
+
+```
+src/
+  app/ - All pages and layouts
+    api/ - Backend API routes
+    dashboard/ - Admin dashboard pages
+      layout.tsx - Dashboard layout with Sidebar and Header
+      page.tsx - Main dashboard statistics page
+      settings/ - Settings section
+    login/ - Authentication pages
+  components/ - Reusable React components
+```
+
+## Authentication Flow
+
+1. Users start at [src/app/page.tsx](mdc:src/app/page.tsx) and are redirected to login
+2. Login page is rendered by [src/app/login/page.tsx](mdc:src/app/login/page.tsx)
+3. Authentication API at [src/app/api/login/route.ts](mdc:src/app/api/login/route.ts)
+4. Upon success, users are redirected to [src/app/dashboard/page.tsx](mdc:src/app/dashboard/page.tsx)
+
+## Components
+
+Shared components are stored in [src/components/](mdc:src/components/):
+
+- **Header**: [src/components/Header.tsx](mdc:src/components/Header.tsx) - Top navigation
+- **Sidebar**: [src/components/Sidebar.tsx](mdc:src/components/Sidebar.tsx) - Dashboard sidebar navigation
+
+## Page Structure
+
+Each dashboard page follows a common structure:
+
+1. Main content wrapped in dashboard layout
+2. Cards for statistics and data display
+3. Consistent styling following the [style guide](mdc:.cursor/rules/style-guide.mdc)
