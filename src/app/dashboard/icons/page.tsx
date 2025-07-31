@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -17,6 +17,10 @@ const IconsPage = () => {
   const [icons, setIcons] = useState<Icon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [sortOption, setSortOption] = useState<"nameAsc" | "nameDesc">(
+    "nameAsc"
+  );
 
   // Function to generate particles
   useEffect(() => {
@@ -85,6 +89,20 @@ const IconsPage = () => {
     fetchIcons();
   }, []);
 
+  const displayedIcons = useMemo(() => {
+    let list = [...icons];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter((ic) => ic.name.toLowerCase().includes(q));
+    }
+    list.sort((a, b) =>
+      sortOption === "nameAsc"
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
+    );
+    return list;
+  }, [icons, search, sortOption]);
+
   const deleteIcon = async (id: number) => {
     try {
       const response = await api.icon.delete(id);
@@ -141,10 +159,29 @@ const IconsPage = () => {
       <div className="relative rounded-xl p-6 bg-gradient-to-r from-[#0f1a35]/80 to-[#2a3c7d]/80 backdrop-blur-sm border border-white/10 shadow-lg overflow-hidden">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/5 rounded-full blur-[120px] animate-pulse"></div>
         <div className="z-10 relative">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-4 flex-wrap">
             <h1 className="text-3xl font-bold mb-2 text-white">
               Icons Management
             </h1>
+            <div className="flex gap-3 items-center">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search..."
+                className="px-2 py-1 rounded border border-white/20 bg-[#17233f] text-white text-sm focus:outline-none"
+              />
+              <select
+                value={sortOption}
+                onChange={(e) =>
+                  setSortOption(e.target.value as "nameAsc" | "nameDesc")
+                }
+                className="px-2 py-1 rounded border border-white/20 bg-[#17233f] text-white text-sm focus:outline-none"
+              >
+                <option value="nameAsc">Name A-Z</option>
+                <option value="nameDesc">Name Z-A</option>
+              </select>
+            </div>
             <Link
               href="/dashboard/icons/new"
               className="px-4 py-2 bg-[#4f9bff] hover:bg-[#3b82f6] text-white rounded-lg transition-colors shadow-lg shadow-[#4f9bff]/30 text-center flex items-center"
@@ -188,7 +225,7 @@ const IconsPage = () => {
       {/* Icons List */}
       {!loading && !error && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {icons.map((icon) => (
+          {displayedIcons.map((icon) => (
             <div
               key={icon.id}
               className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#172442]/90 to-[#0f1a35]/90 backdrop-blur-sm p-4 group hover:scale-[1.02] transition-all duration-300"

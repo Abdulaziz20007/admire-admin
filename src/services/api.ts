@@ -431,6 +431,19 @@ const messageApi = {
   delete: async (id: number | string): Promise<ApiResponse> => {
     return fetchWithAuth(`/message/${id}`, { method: "DELETE" });
   },
+
+  /**
+   * Mark message as read / unread
+   * Backend expects numeric 1|0 via /message/:id/check/:is_checked (PATCH)
+   */
+  setChecked: async (
+    id: number | string,
+    isChecked: boolean | number
+  ): Promise<ApiResponse> => {
+    const val =
+      typeof isChecked === "number" ? (isChecked ? 1 : 0) : isChecked ? 1 : 0;
+    return fetchWithAuth(`/message/${id}/check/${val}`, { method: "PATCH" });
+  },
 };
 
 // Phone API

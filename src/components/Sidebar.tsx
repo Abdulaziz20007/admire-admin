@@ -32,6 +32,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   // Helper function to check if a path is active
   const isActive = (path: string) => {
+    // For the main dashboard link we only want to match the exact path, not its sub-routes
+    if (path === "/dashboard") {
+      return pathname === path; // Only active on the exact dashboard root
+    }
     return pathname === path || pathname.startsWith(`${path}/`);
   };
 

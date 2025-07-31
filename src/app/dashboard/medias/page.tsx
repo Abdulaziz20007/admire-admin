@@ -200,20 +200,11 @@ const MediasPage = () => {
                 {/* Media preview */}
                 <div className="relative h-48 w-full rounded-lg overflow-hidden mb-4 border border-white/20">
                   {media.is_video ? (
-                    <div className="h-full w-full flex items-center justify-center bg-black/40">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-12 w-12 text-white/80"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
+                    <video
+                      src={media.url}
+                      controls
+                      className="h-full w-full object-cover bg-black"
+                    />
                   ) : (
                     <Image
                       src={media.url}

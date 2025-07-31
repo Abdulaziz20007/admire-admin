@@ -209,7 +209,15 @@ const EmptySlot = () => {
 
 // ---------------- Media Components ----------------
 
-const DraggableMediaItem = ({ item }: { item: MediaItem }) => {
+const DraggableMediaItem = ({
+  item,
+  onDuplicate,
+  onRemove,
+}: {
+  item: MediaItem;
+  onDuplicate: (item: MediaItem) => void;
+  onRemove: (item: MediaItem) => void;
+}) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: item.id });
 
@@ -234,6 +242,36 @@ const DraggableMediaItem = ({ item }: { item: MediaItem }) => {
       {...listeners}
       className="relative w-full h-full rounded-lg overflow-hidden bg-white/5 border border-white/10"
     >
+      {/* Duplicate button */}
+      <button
+        type="button"
+        className="absolute top-1 right-1 bg-white/20 hover:bg-white/30 text-xs text-white rounded px-1.5 py-0.5 backdrop-blur-sm"
+        onPointerDownCapture={(e) => {
+          // Prevent drag initiation when pressing duplicate button
+          e.stopPropagation();
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDuplicate(item);
+        }}
+      >
+        ⧉
+      </button>
+      {/* Remove button */}
+      <button
+        type="button"
+        className="absolute top-1 left-1 bg-red-500/60 hover:bg-red-500 text-xs text-white rounded px-1.5 py-0.5 backdrop-blur-sm"
+        onPointerDownCapture={(e) => {
+          // Prevent drag initiation when pressing remove button
+          e.stopPropagation();
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove(item);
+        }}
+      >
+        ✕
+      </button>
       {item.type === "image" ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -256,10 +294,14 @@ const MediaSlot = ({
   index,
   big,
   item,
+  onDuplicate,
+  onRemove,
 }: {
   index: number;
   big: boolean;
   item: MediaItem | null;
+  onDuplicate: (item: MediaItem) => void;
+  onRemove: (item: MediaItem) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({ id: `media-slot-${index}` });
 
@@ -271,7 +313,11 @@ const MediaSlot = ({
       } ${isOver ? "border-blue-400/50" : ""}`}
     >
       {item ? (
-        <DraggableMediaItem item={item} />
+        <DraggableMediaItem
+          item={item}
+          onDuplicate={onDuplicate}
+          onRemove={onRemove}
+        />
       ) : (
         <span className="text-white/20 text-sm">
           Slot {index + 1}
@@ -286,19 +332,27 @@ interface MediaLibraryProps {
   mediaItems: MediaItem[];
   mediaInputRef: React.RefObject<HTMLInputElement | null>;
   handleMediaUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDuplicate: (item: MediaItem) => void;
+  onRemove: (item: MediaItem) => void;
 }
 
 const MediaLibrary = ({
   mediaItems,
   mediaInputRef,
   handleMediaUpload,
+  onDuplicate,
+  onRemove,
 }: MediaLibraryProps) => {
   const { setNodeRef } = useDroppable({ id: "media-library" });
   return (
     <div ref={setNodeRef} className="flex flex-wrap gap-4 mt-2">
       {mediaItems.map((item) => (
         <div key={item.id} className="w-[200px] h-[200px]">
-          <DraggableMediaItem item={item} />
+          <DraggableMediaItem
+            item={item}
+            onDuplicate={onDuplicate}
+            onRemove={onRemove}
+          />
         </div>
       ))}
 
@@ -597,6 +651,43 @@ const VersionEditPage = () => {
     return null;
   };
 
+  // Duplicate media item and place into library
+  const handleDuplicateMedia = (media: MediaItem) => {
+    const newId = `${media.id}-dup-${Date.now()}`;
+    setMediaItems((prev) => [...prev, { ...media, id: newId }]);
+  };
+
+  // Remove media item. If it is a duplicate, delete immediately; otherwise confirm with user.
+  const handleRemoveMedia = (media: MediaItem) => {
+    const performRemoval = () => {
+      // Remove from gallery slots
+      setGallerySlots((prev) =>
+        prev.map((m) => (m?.id === media.id ? null : m))
+      );
+      // Remove from media library
+      setMediaItems((prev) => prev.filter((m) => m.id !== media.id));
+    };
+
+    const isDuplicate = media.id.includes("-dup-");
+    if (isDuplicate) {
+      performRemoval();
+      return;
+    }
+
+    // Show confirmation toast via Sonner
+    toast("Delete this media?", {
+      action: {
+        label: "Delete",
+        onClick: performRemoval,
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 8000,
+    });
+  };
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -733,37 +824,44 @@ const VersionEditPage = () => {
         }
 
         // ---------------------- TEACHERS ----------------------
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const teachersApiData = (teachersRes.data || []) as any[];
-        const allTeachers: TeacherType[] = teachersApiData.map((t) => ({
-          id: `teacher-${t.id}`,
-          name: t.name,
-          surname: t.surname ?? "",
-          role: t.role ?? "",
-          image: t.image,
-        }));
-
+        let allTeachers: TeacherType[] = [];
         const featuredTeacherSlots: (TeacherType | null)[] =
           Array(6).fill(null);
-        (version?.web_teachers || []).forEach((wt) => {
-          if (wt?.teacher) {
-            const teacher: TeacherType = {
-              id: `teacher-${wt.teacher.id}`,
-              name: wt.teacher.name,
-              surname: wt.teacher.surname ?? "",
-              role: wt.teacher.role ?? "",
-              image: wt.teacher.image,
-            };
-            const idx = (wt.order ?? 0) - 1;
-            if (idx >= 0 && idx < featuredTeacherSlots.length) {
-              featuredTeacherSlots[idx] = teacher;
-            }
-          }
-        });
+        let availableTeacherList: TeacherType[] = [];
+        if (teachersRes.error) {
+          toast.error(handleApiError(teachersRes));
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const teachersApiData = (teachersRes.data || []) as any[];
+          allTeachers = teachersApiData.map((t) => ({
+            id: `teacher-${t.id}`,
+            name: t.name,
+            surname: t.surname ?? "",
+            role: t.role ?? "",
+            image: t.image,
+          }));
 
-        const availableTeacherList = allTeachers.filter(
-          (t) => !featuredTeacherSlots.some((ft) => ft && idsMatch(ft.id, t.id))
-        );
+          (version?.web_teachers || []).forEach((wt) => {
+            if (wt?.teacher) {
+              const teacher: TeacherType = {
+                id: `teacher-${wt.teacher.id}`,
+                name: wt.teacher.name,
+                surname: wt.teacher.surname ?? "",
+                role: wt.teacher.role ?? "",
+                image: wt.teacher.image,
+              };
+              const idx = (wt.order ?? 0) - 1;
+              if (idx >= 0 && idx < featuredTeacherSlots.length) {
+                featuredTeacherSlots[idx] = teacher;
+              }
+            }
+          });
+
+          availableTeacherList = allTeachers.filter(
+            (t) =>
+              !featuredTeacherSlots.some((ft) => ft && idsMatch(ft.id, t.id))
+          );
+        }
 
         // ---------------------- STUDENTS ----------------------
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -843,6 +941,43 @@ const VersionEditPage = () => {
             };
           });
 
+          // ---------- Populate gallery slots with already linked media ----------
+          const gallerySlotsArr: (MediaItem | null)[] =
+            Array(TOTAL_GALLERY_SLOTS).fill(null);
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const webMediaRecords = ((version as any)?.web_media || []) as any[];
+
+          webMediaRecords.forEach((wm) => {
+            if (!wm) return;
+
+            // Attempt to locate the media item either via nested object or ID
+            let mediaItem: MediaItem | undefined;
+
+            // Prefer the nested media object (contains fresh data)
+            if (wm.media?.id !== undefined) {
+              const normalizedType: "image" | "video" = wm.media.is_video
+                ? "video"
+                : "image";
+              mediaItem = {
+                id: `media-${wm.media.id}`,
+                type: normalizedType,
+                src: wm.media.url,
+              };
+            } else if (wm.media_id !== undefined && wm.media_id !== null) {
+              mediaItem = allMedia.find((m) => m.id === `media-${wm.media_id}`);
+            }
+
+            if (mediaItem) {
+              const idx = (wm.order ?? 0) - 1; // API uses 1-based order
+              if (idx >= 0 && idx < gallerySlotsArr.length) {
+                gallerySlotsArr[idx] = mediaItem;
+              }
+            }
+          });
+
+          // Push prepared states
+          setGallerySlots(gallerySlotsArr);
           setMediaItems(allMedia);
         }
 
@@ -1370,25 +1505,35 @@ const VersionEditPage = () => {
       }
     });
 
-    // Append arrays as JSON strings
-    fd.append("web_media", JSON.stringify(web_media));
-    fd.append("web_phones", JSON.stringify(web_phones));
-    fd.append("web_socials", JSON.stringify(web_socials));
-    fd.append("web_students", JSON.stringify(web_students));
-    fd.append("web_teachers", JSON.stringify(web_teachers));
+    // Helper to append array objects in "field[index][key]" format
+    const appendNestedArray = (
+      field: string,
+      arr: Record<string, unknown>[]
+    ) => {
+      arr.forEach((obj, idx) => {
+        Object.entries(obj).forEach(([k, v]) => {
+          if (v !== undefined && v !== null)
+            fd.append(`${field}[${idx}][${k}]`, String(v));
+        });
+      });
+    };
+
+    appendNestedArray("web_media", web_media as Record<string, unknown>[]);
+    appendNestedArray("web_phones", web_phones as Record<string, unknown>[]);
+    appendNestedArray("web_socials", web_socials as Record<string, unknown>[]);
+    appendNestedArray(
+      "web_students",
+      web_students as Record<string, unknown>[]
+    );
+    appendNestedArray(
+      "web_teachers",
+      web_teachers as Record<string, unknown>[]
+    );
+
+    // Debug: log payload that will be sent to API
+    console.log("Web Version payload", Object.fromEntries(fd.entries()));
 
     try {
-      // Log payload when creating a new version for easier debugging
-      if (version.id === 0) {
-        // Convert FormData to a plain object for readable logging
-        const payloadObj: Record<string, unknown> = {};
-        fd.forEach((value, key) => {
-          payloadObj[key] = value;
-        });
-        // eslint-disable-next-line no-console
-        console.log("Create Web Version payload", payloadObj);
-      }
-
       const res =
         version.id === 0
           ? await api.web.create(fd)
@@ -1807,6 +1952,8 @@ const VersionEditPage = () => {
                               index={slotIndexZeroBased}
                               big={big}
                               item={gallerySlots[slotIndexZeroBased]}
+                              onDuplicate={handleDuplicateMedia}
+                              onRemove={handleRemoveMedia}
                             />
                           );
 
@@ -1836,11 +1983,21 @@ const VersionEditPage = () => {
                       <h3 className="text-xl font-semibold text-white mb-4">
                         Media Library (Images / Videos)
                       </h3>
-                      <MediaLibrary
-                        mediaItems={mediaItems}
-                        mediaInputRef={mediaInputRef}
-                        handleMediaUpload={handleMediaUpload}
-                      />
+                      {(() => {
+                        // Hide media items that are already placed in gallery slots
+                        const libraryMediaItems = mediaItems.filter(
+                          (m) => !gallerySlots.some((slot) => slot?.id === m.id)
+                        );
+                        return (
+                          <MediaLibrary
+                            mediaItems={libraryMediaItems}
+                            mediaInputRef={mediaInputRef}
+                            handleMediaUpload={handleMediaUpload}
+                            onDuplicate={handleDuplicateMedia}
+                            onRemove={handleRemoveMedia}
+                          />
+                        );
+                      })()}
                     </div>
                   </div>
                 )}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -23,6 +23,10 @@ const TeachersPage = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [sortOption, setSortOption] = useState<"nameAsc" | "nameDesc">(
+    "nameAsc"
+  );
 
   // Fetch teachers
   useEffect(() => {
@@ -45,6 +49,22 @@ const TeachersPage = () => {
 
     fetchTeachers();
   }, []);
+
+  const displayedTeachers = useMemo(() => {
+    let list = [...teachers];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter((t) =>
+        `${t.name} ${t.surname ?? ""}`.toLowerCase().includes(q)
+      );
+    }
+    list.sort((a, b) =>
+      sortOption === "nameAsc"
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
+    );
+    return list;
+  }, [teachers, search, sortOption]);
 
   // actual deletion helper
   const deleteTeacher = async (id: number) => {
@@ -98,6 +118,25 @@ const TeachersPage = () => {
         <div className="z-10 relative">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold mb-2 text-white">Teachers</h1>
+            <div className="flex gap-3 items-center ml-auto">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search..."
+                className="px-2 py-1 rounded border border-white/20 bg-[#17233f] text-white text-sm focus:outline-none"
+              />
+              <select
+                value={sortOption}
+                onChange={(e) =>
+                  setSortOption(e.target.value as "nameAsc" | "nameDesc")
+                }
+                className="px-2 py-1 rounded border border-white/20 bg-[#17233f] text-white text-sm focus:outline-none"
+              >
+                <option value="nameAsc">Name A-Z</option>
+                <option value="nameDesc">Name Z-A</option>
+              </select>
+            </div>
             {canManage && (
               <Link
                 href="/dashboard/teachers/new"
@@ -137,7 +176,7 @@ const TeachersPage = () => {
 
       {!loading && !error && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {teachers.map((teacher) => (
+          {displayedTeachers.map((teacher) => (
             <div
               key={teacher.id}
               className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#172442]/90 to-[#0f1a35]/90 backdrop-blur-sm p-6 group hover:scale-[1.02] transition-all duration-300"
