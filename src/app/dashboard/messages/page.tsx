@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import Link from "next/link";
 import { toast } from "sonner";
 import { api, handleApiError } from "@/services/api";
 import { useAuthStore } from "@/stores/authStore";
@@ -136,7 +135,7 @@ const MessagesPage = () => {
     });
 
     return list;
-  }, [messages, filterStatus, sortOption]);
+  }, [messages, filterStatus, sortOption, search]);
 
   return (
     <div className="space-y-8">

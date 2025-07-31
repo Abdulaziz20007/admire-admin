@@ -23,7 +23,7 @@ const EditIconPage = () => {
   });
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
+  const [, setOriginalUrl] = useState<string | null>(null); // originalUrl state variable not needed directly
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 

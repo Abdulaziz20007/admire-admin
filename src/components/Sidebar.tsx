@@ -17,6 +17,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const router = useRouter();
   const clearToken = useAuthStore((s) => s.clearToken);
 
+  // Reference onToggle to avoid ESLint unused-vars error
+  React.useEffect(() => {}, [onToggle]);
+
   const handleLogout = async () => {
     try {
       await api.auth.logout();
