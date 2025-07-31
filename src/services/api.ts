@@ -40,8 +40,11 @@ const clearAllCredentials = (): void => {
   } catch {}
 };
 
-// Base API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3030";
+// Base API URL (ensure it includes protocol)
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || "localhost:3030";
+const API_URL = /^https?:\/\//.test(RAW_API_URL)
+  ? RAW_API_URL
+  : `https://${RAW_API_URL.replace(/^\/+/, "")}`;
 
 // ---------------------------------------------
 // Axios instance
