@@ -30,13 +30,19 @@ const EditSocialPage = () => {
         api.social.getById(socialId),
       ]);
       if (iconsRes.error) toast.error(handleApiError(iconsRes));
-      else setIcons(iconsRes.data || []);
+      else
+        setIcons(Array.isArray(iconsRes.data) ? (iconsRes.data as Icon[]) : []);
 
       if (socialRes.error) toast.error(handleApiError(socialRes));
       else {
-        setName(socialRes.data?.name || "");
-        setUrl(socialRes.data?.url || "");
-        setIconId(socialRes.data?.icon_id || "");
+        const data = socialRes.data as {
+          name?: string;
+          url?: string;
+          icon_id?: number;
+        };
+        setName(data?.name || "");
+        setUrl(data?.url || "");
+        setIconId(data?.icon_id ?? "");
       }
       setLoading(false);
     };

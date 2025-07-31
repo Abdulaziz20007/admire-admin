@@ -76,7 +76,9 @@ const IconsPage = () => {
         if (response.error) {
           setError(handleApiError(response));
         } else {
-          setIcons(response.data || []);
+          setIcons(
+            Array.isArray(response.data) ? (response.data as Icon[]) : []
+          );
         }
       } catch (err) {
         setError("Failed to fetch icons data");
@@ -126,7 +128,7 @@ const IconsPage = () => {
           <p>Are you sure you want to delete this icon?</p>
           <div className="mt-4 flex gap-3 justify-end">
             <button
-              onClick={() => toast.dismiss(t.id)}
+              onClick={() => toast.dismiss(t)}
               className="px-3 py-1 rounded border border-white/20 text-white/70 hover:bg-white/10 text-sm"
             >
               Cancel
@@ -134,7 +136,7 @@ const IconsPage = () => {
             <button
               onClick={() => {
                 deleteIcon(id);
-                toast.dismiss(t.id);
+                toast.dismiss(t);
               }}
               className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-sm"
             >

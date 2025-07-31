@@ -77,7 +77,7 @@ const LoginPage = () => {
         toast.success("Login successful!");
         router.push("/dashboard");
       }
-    } catch (_error) {
+    } catch {
       setError("Failed to connect to the server.");
     } finally {
       setIsLoading(false);

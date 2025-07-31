@@ -82,7 +82,9 @@ const AdminsPage = () => {
         if (response.error) {
           setError(handleApiError(response));
         } else {
-          setAdmins(response.data || []);
+          setAdmins(
+            Array.isArray(response.data) ? (response.data as Admin[]) : []
+          );
         }
       } catch (err) {
         setError("Failed to fetch admins data");
@@ -143,7 +145,7 @@ const AdminsPage = () => {
           <p>Are you sure you want to delete this admin?</p>
           <div className="mt-4 flex gap-3 justify-end">
             <button
-              onClick={() => toast.dismiss(t.id)}
+              onClick={() => toast.dismiss(t)}
               className="px-3 py-1 rounded border border-white/20 text-white/70 hover:bg-white/10 transition-colors text-sm"
             >
               Cancel
@@ -151,7 +153,7 @@ const AdminsPage = () => {
             <button
               onClick={() => {
                 deleteAdmin(id);
-                toast.dismiss(t.id);
+                toast.dismiss(t);
               }}
               className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white transition-colors text-sm"
             >

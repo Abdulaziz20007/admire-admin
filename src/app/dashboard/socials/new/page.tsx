@@ -23,7 +23,7 @@ const NewSocialPage = () => {
     const fetchIcons = async () => {
       const res = await api.icon.getAll();
       if (res.error) toast.error(handleApiError(res));
-      else setIcons(res.data || []);
+      else setIcons(Array.isArray(res.data) ? (res.data as Icon[]) : []);
     };
     fetchIcons();
   }, []);

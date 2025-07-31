@@ -86,7 +86,7 @@ const SocialsPage = () => {
         <p>Are you sure you want to delete this social?</p>
         <div className="mt-4 flex gap-3 justify-end">
           <button
-            onClick={() => toast.dismiss(t.id)}
+            onClick={() => toast.dismiss(t)}
             className="px-3 py-1 rounded border border-white/20 text-white/70 hover:bg-white/10 text-sm"
           >
             Cancel
@@ -94,7 +94,7 @@ const SocialsPage = () => {
           <button
             onClick={() => {
               deleteSocial(id);
-              toast.dismiss(t.id);
+              toast.dismiss(t);
             }}
             className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-sm"
           >

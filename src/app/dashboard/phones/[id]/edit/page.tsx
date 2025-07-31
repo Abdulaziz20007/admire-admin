@@ -19,7 +19,10 @@ const EditPhonePage = () => {
       if (!phoneId) return;
       const res = await api.phone.getById(phoneId);
       if (res.error) toast.error(handleApiError(res));
-      else setPhone(res.data?.phone || "");
+      else {
+        const data = res.data as { phone?: string };
+        setPhone(data?.phone || "");
+      }
       setLoading(false);
     };
     fetchPhone();
