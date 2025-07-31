@@ -299,7 +299,7 @@ const adminApi = {
     new_password: string;
   }): Promise<ApiResponse> => {
     return fetchWithAuth("/admin/change-password", {
-      method: "PATCH",
+      method: "PUT",
       body: JSON.stringify(data),
     });
   },
