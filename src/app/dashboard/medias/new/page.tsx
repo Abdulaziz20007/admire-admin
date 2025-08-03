@@ -96,10 +96,11 @@ const NewMediaPage = () => {
       return;
     }
 
-    // Update form data with file type
+    // Update form data with file type and auto-fill name from selected file
     setFormData({
       ...formData,
       is_video: isVideo,
+      name: selectedFile.name.replace(/\.[^/.]+$/, ""),
     });
 
     setFile(selectedFile);
